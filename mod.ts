@@ -1,16 +1,23 @@
 import { getHtml } from "./doc.tsx";
 import { getPlist } from "./plist.tsx";
 import { doc } from "https://deno.land/x/deno_doc@v0.33.0/mod.ts";
-import type { DocNodeKind } from "https://deno.land/x/deno_doc@v0.33.0/lib/types.d.ts";
+import type {
+  DocNode,
+  DocNodeKind,
+} from "https://deno.land/x/deno_doc@v0.33.0/lib/types.d.ts";
 import { DB } from "https://deno.land/x/sqlite@v3.3.0/mod.ts";
 import { relative } from "https://deno.land/std@0.131.0/path/mod.ts";
+import { asCollection } from "https://raw.githubusercontent.com/denoland/docland/194467fb0412b9f9304e39adc87bc6bbe4ca1c46/components/common.tsx";
 
-export async function makeDoc(name: string, url: string) {
-  // Resolve redirection
-  url = await fetch(url, { method: "HEAD" }).then((r) => r.url);
+export async function makeDoc(name: string, url: string, entries?: DocNode[]) {
+  // NOTE: url can be "deno/stable" or "deno/unstable"
+  if (!url.startsWith("deno/")) {
+    // Resolve redirection
+    url = await fetch(url, { method: "HEAD" }).then((r) => r.url);
+  }
 
   // Fetch document
-  const docNodes = await doc(url);
+  const docNodes = entries ?? await doc(url);
 
   // Create the Docset Folder
   await Deno.mkdir(
@@ -47,20 +54,24 @@ export async function makeDoc(name: string, url: string) {
   await Deno.writeTextFile(`${dir}/index.html`, html);
 
   // Create other pages
-  await Promise.all(docNodes.map(async (node) => {
-    const dir =
-      `${name}.docset/Contents/Resources/Documents/${url}/~/${node.name}`;
+  await Promise.all(
+    Object.values(asCollection(docNodes)).flat().map(
+      async ([title, node]: [string, DocNode]) => {
+        const dir =
+          `${name}.docset/Contents/Resources/Documents/${url}/~/${title}`;
 
-    const html = await getHtml(url, node.name, docNodes)
-      .then((html) => fixHyperLink(html, `${url}/~/${node.name}`));
+        const html = await getHtml(url, title, docNodes)
+          .then((html) => fixHyperLink(html, `${url}/~/${title}`));
 
-    db.query(
-      "INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?, ?, ?);",
-      [node.name, translateType(node.kind), `./${url}/index.html`],
-    );
-    await Deno.mkdir(dir, { recursive: true });
-    await Deno.writeTextFile(`${dir}/index.html`, html);
-  }));
+        db.query(
+          "INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?, ?, ?);",
+          [node.name, translateType(node.kind), `./${url}/index.html`],
+        );
+        await Deno.mkdir(dir, { recursive: true });
+        await Deno.writeTextFile(`${dir}/index.html`, html);
+      },
+    ),
+  );
   db.close();
 
   // Download icon

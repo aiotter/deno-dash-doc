@@ -33,7 +33,7 @@ export async function getHtml(
   sheet.reset();
   const page = renderSSR(
     <App>
-      <DocPage base={new URL(url)}>{item}</DocPage>
+      <DocPage base={new URL(`https://doc.deno.land/{url}`)}>{item}</DocPage>
     </App>,
   );
   return getBody(Helmet.SSR(page), getStyleTag(sheet));
