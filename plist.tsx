@@ -17,6 +17,8 @@ export function getPlist(name: string, url: string) {
         <string>{name}</string>
         <key>isDashDocset</key>
         <true />
+        <key>DashDocSetFamily</key>
+        <string>dashtoc</string>
         <key>dashIndexFilePath</key>
         <string>./{url}/index.html</string>
       </dict>

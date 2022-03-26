@@ -8,6 +8,10 @@ import type {
 import { DB } from "https://deno.land/x/sqlite@v3.3.0/mod.ts";
 import { relative } from "https://deno.land/std@0.131.0/path/mod.ts";
 import { asCollection } from "https://raw.githubusercontent.com/denoland/docland/ac0404d5af4a7c2bd2159cec3cddb13569c9f4e6/components/common.tsx";
+import {
+  DOMParser,
+  NodeType,
+} from "https://deno.land/x/deno_dom@v0.1.21-alpha/deno-dom-wasm.ts";
 
 export async function makeDoc(name: string, url: string, entries?: DocNode[]) {
   // NOTE: url can be "deno/stable" or "deno/unstable"
@@ -43,7 +47,8 @@ export async function makeDoc(name: string, url: string, entries?: DocNode[]) {
   // Create top page
   const dir = `${name}.docset/Contents/Resources/Documents/${url}`;
   const html = await getHtml(url, undefined, docNodes)
-    .then((html) => fixHyperLink(html, url));
+    .then((html) => fixHyperLink(html, url))
+    .then(optimise);
 
   db.query(
     "INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?, ?, ?);",
@@ -61,7 +66,8 @@ export async function makeDoc(name: string, url: string, entries?: DocNode[]) {
           `${name}.docset/Contents/Resources/Documents/${url}/~/${title}`;
 
         const html = await getHtml(url, title, docNodes)
-          .then((html) => fixHyperLink(html, `${url}/~/${title}`));
+          .then((html) => fixHyperLink(html, `${url}/~/${title}`))
+          .then(optimise);
 
         db.query(
           "INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?, ?, ?);",
@@ -119,4 +125,19 @@ function fixHyperLink(html: string, base: string) {
     /href="\/(.*?)"/g,
     (_, path) => `href="./${relative(base, path)}/index.html"`,
   );
+}
+
+function optimise(html: string) {
+  const doc = new DOMParser().parseFromString(html, "text/html")!;
+  doc.getElementsByTagName("nav").forEach((tag) => tag.remove());
+  doc.getElementsByTagName("header").forEach((tag) => tag.remove());
+  for (const element of doc.querySelectorAll("h2[id]")) {
+    const name = Array.from(element.childNodes)
+      .find((e) => e.nodeType === NodeType.TEXT_NODE)?.nodeValue;
+
+    const a = doc.querySelector(`h2#${(element as unknown as Element).id} > a`);
+    a?.setAttribute("name", `//apple_ref/cpp/Section/${name}`);
+    a?.classList.add("dashAnchor");
+  }
+  return doc.documentElement!.outerHTML;
 }
