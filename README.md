@@ -1,7 +1,7 @@
 # [Dash](https://kapeli.com/dash) docset generator for [Deno doc](https://doc.deno.land)
 ## Installation
 ```bash
-deno install --allow-read=. --allow-write=. --allow-net --no-check --name=deno-dash-doc https://deno.land/x/deno_dash_doc/cli.ts
+deno install --allow-read=. --allow-write=. --allow-net --no-check --name=deno-dash-doc "https://deno.land/x/dash_doc/cli.ts"
 ```
 
 ## Usage
