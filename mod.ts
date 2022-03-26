@@ -7,7 +7,7 @@ import type {
 } from "https://deno.land/x/deno_doc@v0.33.0/lib/types.d.ts";
 import { DB } from "https://deno.land/x/sqlite@v3.3.0/mod.ts";
 import { relative } from "https://deno.land/std@0.131.0/path/mod.ts";
-import { asCollection } from "https://raw.githubusercontent.com/denoland/docland/194467fb0412b9f9304e39adc87bc6bbe4ca1c46/components/common.tsx";
+import { asCollection } from "https://raw.githubusercontent.com/denoland/docland/ac0404d5af4a7c2bd2159cec3cddb13569c9f4e6/components/common.tsx";
 
 export async function makeDoc(name: string, url: string, entries?: DocNode[]) {
   // NOTE: url can be "deno/stable" or "deno/unstable"
