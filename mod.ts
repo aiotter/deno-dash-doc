@@ -71,7 +71,7 @@ export async function makeDoc(name: string, url: string, entries?: DocNode[]) {
 
         db.query(
           "INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?, ?, ?);",
-          [node.name, translateType(node.kind), `./${url}/index.html`],
+          [node.name, translateType(node.kind), `./${url}/~/${title}/index.html`],
         );
         await Deno.mkdir(dir, { recursive: true });
         await Deno.writeTextFile(`${dir}/index.html`, html);
