@@ -7,7 +7,7 @@ import type {
 } from "https://deno.land/x/deno_doc@0.80.0/types.d.ts";
 import { DB } from "https://deno.land/x/sqlite@v3.3.0/mod.ts";
 import { relative } from "https://deno.land/std@0.131.0/path/mod.ts";
-import { asCollection } from "docland/components/common.tsx";
+import { asCollection } from "https://raw.githubusercontent.com/denoland/docland/d26f2c15e4bedd6b6a6114c3a129d7abdda2e55d/components/common.tsx";
 import {
   DOMParser,
   NodeType,
