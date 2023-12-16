@@ -13,15 +13,14 @@ import {
   h,
   Helmet,
   renderSSR,
-  virtualSheet,
-} from "https://raw.githubusercontent.com/denoland/docland/ac0404d5af4a7c2bd2159cec3cddb13569c9f4e6/deps.ts";
+} from "docland/deps.ts";
 import {
   sheet,
   store,
-} from "https://raw.githubusercontent.com/denoland/docland/ac0404d5af4a7c2bd2159cec3cddb13569c9f4e6/shared.ts";
-import { App } from "https://raw.githubusercontent.com/denoland/docland/ac0404d5af4a7c2bd2159cec3cddb13569c9f4e6/components/app.tsx";
-import { DocPage } from "https://raw.githubusercontent.com/denoland/docland/ac0404d5af4a7c2bd2159cec3cddb13569c9f4e6/components/doc.tsx";
-import { getBody } from "https://raw.githubusercontent.com/denoland/docland/ac0404d5af4a7c2bd2159cec3cddb13569c9f4e6/util.ts";
+} from "docland/shared.ts";
+import { App } from "docland/components/app.tsx";
+import { DocPage } from "docland/components/doc.tsx";
+import { getBody } from "docland/util.ts";
 
 export async function getHtml(
   url: string,

@@ -1,13 +1,13 @@
 import { getHtml } from "./doc.tsx";
 import { getPlist } from "./plist.tsx";
-import { doc } from "https://deno.land/x/deno_doc@v0.33.0/mod.ts";
+import { doc } from "deno_doc/mod.ts";
 import type {
   DocNode,
   DocNodeKind,
-} from "https://deno.land/x/deno_doc@v0.33.0/lib/types.d.ts";
+} from "deno_doc/types.d.ts";
 import { DB } from "https://deno.land/x/sqlite@v3.3.0/mod.ts";
 import { relative } from "https://deno.land/std@0.131.0/path/mod.ts";
-import { asCollection } from "https://raw.githubusercontent.com/denoland/docland/ac0404d5af4a7c2bd2159cec3cddb13569c9f4e6/components/common.tsx";
+import { asCollection } from "docland/components/common.tsx";
 import {
   DOMParser,
   NodeType,
