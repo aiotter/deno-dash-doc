@@ -1,10 +1,10 @@
 import { getHtml } from "./doc.tsx";
 import { getPlist } from "./plist.tsx";
-import { doc } from "deno_doc/mod.ts";
+import { doc } from "https://deno.land/x/deno_doc@0.80.0/mod.ts";
 import type {
   DocNode,
   DocNodeKind,
-} from "deno_doc/types.d.ts";
+} from "https://deno.land/x/deno_doc@0.80.0/types.d.ts";
 import { DB } from "https://deno.land/x/sqlite@v3.3.0/mod.ts";
 import { relative } from "https://deno.land/std@0.131.0/path/mod.ts";
 import { asCollection } from "docland/components/common.tsx";
@@ -71,7 +71,11 @@ export async function makeDoc(name: string, url: string, entries?: DocNode[]) {
 
         db.query(
           "INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?, ?, ?);",
-          [node.name, translateType(node.kind), `./${url}/~/${title}/index.html`],
+          [
+            node.name,
+            translateType(node.kind),
+            `./${url}/~/${title}/index.html`,
+          ],
         );
         await Deno.mkdir(dir, { recursive: true });
         await Deno.writeTextFile(`${dir}/index.html`, html);

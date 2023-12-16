@@ -1,7 +1,3 @@
 {
-  "imports": {
-    "docland/": "https://raw.githubusercontent.com/denoland/docland/d26f2c15e4bedd6b6a6114c3a129d7abdda2e55d/",
-    "deno_doc/": "https://deno.land/x/deno_doc@0.80.0/"
-  },
   "lock": false
 }
